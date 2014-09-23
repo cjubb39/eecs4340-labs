@@ -27,8 +27,10 @@ wire [ARRAY_WIDTH_LOG2 - 1:0] out_index; /* if we are searching */
 logic found;
 logic written;
 
-logic [2**ARRAY_WIDTH_LOG2 - 1:0] cam [2**ARRAY_SIZE_LOG2 - 1:0];
-logic [2**ARRAY_SIZE_LOG2 - 1:0] cam_v; 
+wire [2**ARRAY_WIDTH_LOG2 - 1:0] cam_i [2**ARRAY_SIZE_LOG2 - 1:0];
+wire [2**ARRAY_WIDTH_LOG2 - 1:0] cam_o [2**ARRAY_SIZE_LOG2 - 1:0];
+wire [2**ARRAY_SIZE_LOG2 - 1:0] cam_v_i; 
+wire [2**ARRAY_SIZE_LOG2 - 1:0] cam_v_o; 
 
 /* index for cam search */
 logic [ARRAY_SIZE_LOG2-1:0] i;
@@ -47,9 +49,9 @@ always_comb begin
     end
     else begin
         if(read_i) begin
-            written = cam_v[read_index_i];
+            written = cam_v_o[read_index_i];
             /* not optimal to drive to 0 */
-            out_value = (cam_v[read_index_i] == 1'b1) ? cam[read_index_i] : 'b0; 
+            out_value = (cam_v_o[read_index_i] == 1'b1) ? cam_o[read_index_i] : 'b0; 
         end
     end
 end
@@ -65,29 +67,41 @@ always_comb begin
         found = 1'b0;
         /* this is ugly */
         for(i='b0;i<2**ARRAY_SIZE_LOG2;i=i+1'b1) begin
-            if(cam_v[i]==1'b1) begin
-                if(cam[i] == search_data_i) begin
+            if(cam_v_o[i]==1'b1) begin
+                if(cam_o[i] == search_data_i) begin
                     found = 1'b1;
                     out_index = i;
                     i = 2**ARRAY_SIZE_LOG2; /* break */
                 end
             end
         end
+
     end
 end
 
+
+
 /* write functionality */
+/* cam valid register */
+register #(.SIZE(2**ARRAY_SIZE_LOG2)) ar_inst (.clk(clk), .reset_i(reset_i), .data_i(cam_v_o), .data_o(cam_v_o));
+
+generate
+for(genvar iter = 0; iter<2**ARRAY_SIZE_LOG2;iter++) begin
+register #(.SIZE(2**ARRAY_SIZE_LOG2)) ar_inst(.clk(clk), .reset_i(reset_i), .data_i(cam_i[iter]), .data_o(cam_o[iter]));
+
 always_ff @(posedge clk) begin
     if(~reset_i) begin
         /* dont bother reseting whole cam */
-        cam_v <= 'b0;
+        cam_v_i[iter] <= 1'b0;
     end
     else begin
         if(write_i)
             /* need to replace this with stock FF */
-            {cam[write_index_i],cam_v[write_index_i]} <= {write_data_i, 1'b1};
+            {cam_i[write_index_i],cam_v_i[write_index_i]} <= {write_data_i, 1'b1};
     end
 end
+end
+endgenerate
 
 
 

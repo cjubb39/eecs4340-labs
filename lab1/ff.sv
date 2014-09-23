@@ -1,22 +1,27 @@
 
 module ff #(
-parameter SIZE = 5
+parameter SIZE =1 
 )
 (
   input clk,
   input reset_i,
 
-  input logic [SIZE-1:0] in,
-  output logic [SIZE- 1:0] out 
+  input logic [SIZE-1:0] data_i,
+  output logic [SIZE- 1:0] data_o
 );
- 
+
+reg [SIZE-1:0] data;
+
+assign data_o = data;
+
+
 always_ff @(posedge clk) begin
     if(~reset_i) begin
         /* dont bother reseting whole cam */
-        out <= 'b0;
+        data <= 'b0;
     end
     else begin
-        out <= in;
+        data <= data_i;
     end
 end
 
