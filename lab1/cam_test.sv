@@ -37,6 +37,7 @@ module cam_test #(parameter ARRAY_WIDTH_LOG2 = 5, parameter ARRAY_SIZE_LOG2 = 5)
     search_i = 1'b0;
     search_data_i = 'b0;
     #10;//clk low
+    reset_1 = 1'b1;
     write_index_i = 5'h00001;
     write_data_i = 32'h0000_0001;
     write_i = 1'b1;
