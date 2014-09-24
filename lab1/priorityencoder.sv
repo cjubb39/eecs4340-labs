@@ -42,7 +42,7 @@ module priorityencoder #(parameter SIZE = 5) (
                                    32'b001x_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx: out_o=5'd29;
                                    32'b01xx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx: out_o=5'd30;
                                    32'b1xxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx_xxxx: out_o=5'd31;
-			default: out_o=5'd0;
+			default: out_o=out_o;
 		endcase
 
 		if (inp_i == 32'd0) begin
