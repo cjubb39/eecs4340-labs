@@ -16,8 +16,7 @@ assign data_o = data;
 
 
 always_ff @(posedge clk) begin
-    if(~reset_i) begin
-        /* dont bother reseting whole cam */
+    if(reset_i) begin
         data <= 'b0;
     end
     else begin
