@@ -1,5 +1,5 @@
 build:
-	vcs -full64 -sverilog +lint=all,noVCDE -debug_pp cam.sv cam_test.sv register.sv ff.sv -o cam
+	vcs -full64 -sverilog +lint=all,noVCDE -debug_pp cam.sv cam_test.sv register.sv ff.sv priorityencoder.sv -o cam
 
 run:
 	./cam

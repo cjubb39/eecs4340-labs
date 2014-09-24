@@ -36,13 +36,7 @@ module cam_test #(parameter ARRAY_WIDTH_LOG2 = 5, parameter ARRAY_SIZE_LOG2 = 5)
     write_data_i = 'b0;
     search_i = 1'b0;
     search_data_i = 'b0;
-		
-		$display("mark");
-
     #10;//clk low
-    
-		$display("mark2");
-
 		reset_i = 1'b1;
     write_index_i = 5'b00001;
     write_data_i = 32'h0000_0001;
@@ -93,13 +87,9 @@ module cam_test #(parameter ARRAY_WIDTH_LOG2 = 5, parameter ARRAY_SIZE_LOG2 = 5)
     #5 //h
     #5 //l
     
-
-
     #2 $display("value of valid signal is %d\n",search_valid_o);
 
-
 		end
-
 
     initial begin
     #200 $finish;

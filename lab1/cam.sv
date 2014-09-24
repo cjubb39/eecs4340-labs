@@ -70,12 +70,12 @@ end
       
 
 
-priorityencoder #(.SIZE(ARRAY_SIZE_LOG2)) pri_inst (.inp_i(priority_in), .out_o(result), .valid_o(priority_res));
+priorityencoder #(.SIZE(ARRAY_SIZE_LOG2)) pri_inst (.inp_i(priority_in), .out_o(out_index), .valid_o(priority_res));
 
 /* search functionality */
 always_comb begin
     if(reset_i) begin
-        out_index = 'b0;
+        found = 'b0;
     end
     else begin
         if(search_i) begin
@@ -112,7 +112,6 @@ always_comb begin
                                (cam_o[30]==search_data_i)&cam_v_o[30],         
                                (cam_o[31] == search_data_i)&cam_v_o[31]};   
             found = priority_res;
-            search_index_o = result;
         end
     end
 end
