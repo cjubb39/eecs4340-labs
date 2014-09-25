@@ -153,7 +153,7 @@ end
 endgenerate
 
 /* if write, place on input of FF */
-always_ff @(posedge clk) begin
+always_comb begin
     if(~reset_i) begin
         cam_v_i = 'b0;
     end
