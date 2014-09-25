@@ -19,12 +19,13 @@ We wanted to avoid a large block of if-else. To do this, we AND the search value
 Additional details can be found in the in-code comments.
 
 ##Testbench output
-0	0	 0	0 
-3	1	 0	0
-3	0	 0	0
-5	1	 5	1
-9	1	 5	0
-9	1	 5	1
+read_o 	read_valid 	search_o 	search_valid
+0	     0	 	   0		      0 
+3	     1	 	   0		      0
+3	     0	 	   0		      0
+5	     1	 	   5		      1
+9	     1	 	   5		      0
+9	     1	 	   5		      1
 
 ###Functionality check
 Row 1: reset
