@@ -18,4 +18,20 @@ We wanted to avoid a large block of if-else. To do this, we AND the search value
 
 Additional details can be found in the in-code comments.
 
+##Testbench output
+0	0	 0	0 
+3	1	 0	0
+3	0	 0	0
+5	1	 5	1
+9	1	 5	0
+9	1	 5	1
 
+###Functionality check
+Row 1: reset
+Row 2: 3 written to index 3 previous, read index 3
+Row 3: Read index 4 (nothing written there previously)
+Row 4: Read index 5, search "5", write "9" to index 5
+Row 5: Read index 5, search "5", write "5" to index 9
+Row 6: Read index 5, search "9"
+
+ 
