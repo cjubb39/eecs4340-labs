@@ -1,6 +1,6 @@
 #Lab 1 Overview
 ---
-A CAM implementation in SystemVerilog. It consists of three primary functions. We wrote a test bench to test not only that each functionality works indepently but also that all functionalities work simultaneously.  This test bench was verified by both inspecting the waveforms and printing values directly from the test bench.
+A CAM implementation in SystemVerilog. It consists of three primary functions: Read, Write, and Search. We wrote a test bench to test not only that each functionality works indepently but also that all functionalities work simultaneously (i.e. read and search output immediately, write occurs at subsequent clock posedge).  This test bench was verified by both inspecting the waveforms and printing values directly from the test bench.
 
 #CAM
 Our cam is implemented using the registers we built in class. We connect to it from combinational logic in our file using wires. 
@@ -13,8 +13,9 @@ When we are given an index and data to write to, along with a valid bit, we put 
 
 
 ##Search
-We wanted to avoid a large block of if-else. To do this, we and the search value with the output values from every entry in the CAM and generate a 32-bit value where 1's indicate matches with the CAM value (only if the value in the cam is valid). We then run this into a priority encoder, which gives us the index of the first matching entry in the cam. If no entry is found, our search_valid_o is set to 0. 
+We wanted to avoid a large block of if-else. To do this, we AND the search value with the output values from every entry in the CAM and generate a 32-bit value where 1's indicate matches with the CAM value (only if the value in the cam is valid). We then run this into a priority encoder, which gives us the index of the first matching entry in the cam. If no entry is found, our search_valid_o is set to 0. 
 
 
+Additional details can be found in the in-code comments.
 
 

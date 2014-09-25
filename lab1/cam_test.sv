@@ -28,7 +28,7 @@ module cam_test #(parameter ARRAY_WIDTH_LOG2 = 5, parameter ARRAY_SIZE_LOG2 = 5)
 		$vcdpluson;
 	// making logic signals 0 at start
     clk = 1'b0;
-    reset_i = 1'b1;
+    reset_i = 1'b0;
     read_i = 1'b0;
     read_index_i = 'b0;
     write_i = 1'b0;
@@ -37,7 +37,7 @@ module cam_test #(parameter ARRAY_WIDTH_LOG2 = 5, parameter ARRAY_SIZE_LOG2 = 5)
     search_i = 1'b0;
     search_data_i = 'b0;
     #10;//clk low
-		reset_i = 1'b0;
+    reset_i = 1'b1;
     write_index_i = 5'b00001;
     write_data_i = 32'h0000_0001;
     write_i = 1'b1;
