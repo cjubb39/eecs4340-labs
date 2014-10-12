@@ -1,7 +1,7 @@
 `timescale 1ns/1ns
 
 class transaction;
-    rant bit a;
+    rand bit a;
     bit out;
 
     function void golden_result;
@@ -13,7 +13,7 @@ class transaction;
     endfunction
 endclass
 
-program tb(ifc.bench ds);
+program tb(ff_ifc.bench ds);
     transaction t;
 
     initial begin

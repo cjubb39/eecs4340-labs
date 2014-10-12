@@ -1,9 +1,9 @@
-
-module ff #(parameter SIZE =1)(ifc.dut d);
+`timescale 1ns/1ns
+module ff #(parameter SIZE =1)(ff_ifc.dut d);
 
 reg [SIZE-1:0] data;
 
-assign data_o = data;
+assign d.data_o = data;
 
 
 always_ff @(posedge d.clk) begin
