@@ -1,12 +1,22 @@
-build:
-	vcs -full64 -sverilog +lint=all,noVCDE -debug_pp cam.sv cam_test.sv register.sv ff.sv priorityencoder.sv -o cam
+DUV=ff
+TEST=ff_tb
+BENCH=ff_tb.exe
 
-run:
-	./cam
 
+all: 
+	make clean
+	make test
+	make view
+
+test:
+	vcs -full64 -PP -sverilog +define+SV +define+VPD $(DUV).sv $(TEST).sv -o $(BENCH)
+	./$(BENCH)
+	
 view:
-	vpd2vcd vcdplus.vpd vcdplus.vcd &
-	gtkwave vcdplus.vcd &
+	dve -full64 -vpd vcdplus.vpd &
 
+leda:
+	leda -full64 -sverilog -top $(DUV) $(DUV).sv
+	
 clean:
-	rm -rf csrc *.daidir *.exe *.log *.inf .leda_work *.key *.vpd *.vcd DVEfiles cam
+	rm -rf csrc *.exe.daidir *.exe *.log *.inf .leda_work *.key *.vpd *.vcd DVEfiles
