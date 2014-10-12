@@ -29,9 +29,4 @@ program tb(ifc.bench ds);
       end
    end
 
-
-
-
-
-
 endprogram
