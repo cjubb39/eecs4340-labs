@@ -1,22 +1,33 @@
-DUV=ff
-TEST=ff_tb
-BENCH=ff_tb.exe
+TOP=ff_top.sv
+INTERFACE=ff_ifc.sv
+BENCH=ff_tb.sv
+DUT=ff.sv
 
+.PHONY: help
 
-all: 
-	make clean
-	make test
-	make view
+help:
+    @echo "The following make targets are supported:" ;\
+    echo " bench  - builds the testbench";\
+    echo " wave   - convert vcd to vpd";\
+    echo " expand - expands veritedium directives (autoargs, inst etc.)";\
+    echo " indent - automatically indents verilog and c files" ;\
+    echo " clean  - cleans testbench and intermediate files" ;\
+    echo " help   - show this information";\
 
-test:
-	vcs -full64 -PP -sverilog +define+SV +define+VPD $(DUV).sv $(TEST).sv -o $(BENCH)
-	./$(BENCH)
-	
-view:
-	dve -full64 -vpd vcdplus.vpd &
+indent:
+    emacs --batch *.sv -f verilog-batch-indent
+    indent -linux *.c *.h
+    rm *~
 
-leda:
-	leda -full64 -sverilog -top $(DUV) $(DUV).sv
-	
+dut:  
+    vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice $(DUT) $(INTERFACE)
+
+bench: 
+    vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice *.sv -o testbench.exe
+
+wave:
+    vcs -vpd2vcd vcdplus.vpd waveform.vcd
+    gtkwave waveform.vcd &
+
 clean:
-	rm -rf csrc *.exe.daidir *.exe *.log *.inf .leda_work *.key *.vpd *.vcd DVEfiles
+    rm -rf *.o *~ *.vpd sim* csrc DVEfiles *daidir *exe *.key
