@@ -1,31 +1,37 @@
+`timescale 1ns/1ns
+class transaction;
+    rant int a;
+    int out;
 
-module ff_tb #(
-parameter SIZE = 1
-)();
-`define clk_per 10
+    function void golden_result;
+        out = a;
+    endfunction
 
-    logic clk;
-    logic reset_i;
+    function bit check_result(int x);
+        return(x == out);
+    endfunction
+endclass
 
-    logic [SIZE-1:0] data_i;
-    logic [SIZE-1:0] data_o;
-
-    ff ff_inst (.*);
-
-    always #(`clk_per/2) clk = ~clk;
-    
-    initial begin
-    $vcdpluson;
-    // making logic signals 0 at start
-    
-
-    end
+program tb(ifc.bench ds);
+    transaction t;
 
     initial begin
-    #200 $finish;
-    end
+        repeat(10000) begin
+    t = new();
+    t.randomize();
 
-    initial begin
-	//$monitor("%d\t%d\t%d\t%d", read_value_o, read_valid_o, search_index_o, search_valid_o);
-    end
-endmodule
+     // drive inputs for next cycle
+     $display("%t : %s \n", $realtime, "Driving New Values");
+     ds.cb.data_i <= t.a;
+     @(ds.cb);
+     t.golden_result();
+     $display("%t : %s \n", $realtime,t.check_result(ds.cb.data_o)?"Pass":"Fail");
+      end
+   end
+
+
+
+
+
+
+endprogram

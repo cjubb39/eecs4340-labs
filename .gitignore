@@ -1,0 +1,11 @@
+.DS_Store
+csrc 
+*.exe.daidir 
+*.exe 
+*.log 
+*.inf 
+.leda_work 
+*.key 
+*.vpd 
+*.vcd 
+DVEfiles

@@ -1,30 +1,19 @@
 
-module ff #(
-parameter SIZE =1 
-)
-(
-  input clk,
-  input reset_i,
-
-  input logic [SIZE-1:0] data_i,
-  output logic [SIZE- 1:0] data_o
-);
+module ff #(parameter SIZE =1)(ifc.dut d);
 
 reg [SIZE-1:0] data;
 
 assign data_o = data;
 
 
-always_ff @(posedge clk) begin
-    if(reset_i) begin
+always_ff @(posedge d.clk) begin
+    if(d.reset) begin
         data <= 'b0;
     end
     else begin
-        data <= data_i;
+        data <= d.data_i;
     end
 end
-
-
 
 
 endmodule
