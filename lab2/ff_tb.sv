@@ -26,6 +26,6 @@ parameter SIZE = 1
     end
 
     initial begin
-	$monitor("%d\t%d\t%d\t%d", read_value_o, read_valid_o, search_index_o, search_valid_o);
+	//$monitor("%d\t%d\t%d\t%d", read_value_o, read_valid_o, search_index_o, search_valid_o);
     end
 endmodule
