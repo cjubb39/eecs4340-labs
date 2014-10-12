@@ -1,5 +1,5 @@
 
-module ff #(parameter SIZE =32)(ifc.dut d);
+module ff #(parameter SIZE =1)(ifc.dut d);
 
 reg [SIZE-1:0] data;
 

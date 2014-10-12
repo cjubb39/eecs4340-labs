@@ -1,13 +1,14 @@
 `timescale 1ns/1ns
+
 class transaction;
-    rant int a;
-    int out;
+    rant bit a;
+    bit out;
 
     function void golden_result;
         out = a;
     endfunction
 
-    function bit check_result(int x);
+    function bit check_result(bit x);
         return(x == out);
     endfunction
 endclass
