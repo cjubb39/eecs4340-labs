@@ -13,6 +13,6 @@ module ff_top;
 
    ff_ifc IFC(clk); // instantiate the interface file
    ff dut (IFC.dut); 
-   ff_tb bench  (IFC.bench);
+   ff_tb bench (IFC.bench);
 
 endmodule
