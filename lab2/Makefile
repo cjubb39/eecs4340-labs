@@ -1,29 +1,27 @@
-TOP=ff_top.sv
-INTERFACE=ff_ifc.sv
-BENCH=ff_tb.sv
-DUT=ff.sv
+CAMTOP=cam_top.sv
+CAMINTERFACE=cam_ifc.sv
+CAMBENCH=cam_tb.sv
+CAMDUT=cam.sv
 
-.PHONY: help
+
+FFTOP=ff_top.sv
+FFINTERFACE=ff_ifc.sv
+FFBENCH=ff_tb.sv
+FFDUT=ff.sv
 
 help:
 	@echo "The following make targets are supported:" ;\
-	echo " bench  - builds the testbench";\
+	echo " ffbench  - builds the testbench";\
+	echo " cambench  - builds the testbench";\
 	echo " wave   - convert vcd to vpd";\
-	echo " expand - expands veritedium directives (autoargs, inst etc.)";\
-	echo " indent - automatically indents verilog and c files" ;\
 	echo " clean  - cleans testbench and intermediate files" ;\
 	echo " help   - show this information";\
 
-indent:
-	emacs --batch *.sv -f verilog-batch-indent
-	indent -linux *.c *.h
-	rm *~
+cambench: 
+	vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice $(CAMTOP) $(CAMINTERFACE) $(CAMBENCH) $(CAMDUT) -o camtestbench.exe
 
-dut:  
-	vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice $(DUT) $(INTERFACE)
-
-bench: 
-	vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice *.sv -o testbench.exe
+ffbench: 
+	vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice $(FFTOP) $(FFINTERFACE) $(FFBENCH) $(FFDUT) -o fftestbench.exe
 
 wave:
 	vcs -vpd2vcd vcdplus.vpd waveform.vcd
