@@ -15,6 +15,7 @@ interface ff_ifc #(parameter SIZE=1)(input bit clk);
    modport bench (clocking cb);
 
    modport dut (
+	input clk,
         input  data_i,
         input  reset,
         output data_o

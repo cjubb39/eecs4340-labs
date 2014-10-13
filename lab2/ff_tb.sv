@@ -3,9 +3,15 @@
 class transaction;
     rand bit a;
     bit out;
-
+    bit next;
+ 
     function void golden_result;
-        out = a;
+        out = next;
+	next = a;
+    endfunction
+
+    function bit last;
+        return next;
     endfunction
 
     function bit check_result(bit x);
@@ -13,20 +19,26 @@ class transaction;
     endfunction
 endclass
 
-program tb(ff_ifc.bench ds);
+
+program ff_tb(ff_ifc.bench ds);
     transaction t;
 
     initial begin
-        repeat(10000) begin
-    t = new();
-    t.randomize();
+       t = new();
+       repeat(100) begin
+         t.randomize();
 
-     // drive inputs for next cycle
-     $display("%t : %s \n", $realtime, "Driving New Values");
-     ds.cb.data_i <= t.a;
-     @(ds.cb);
-     t.golden_result();
-     $display("%t : %s \n", $realtime,t.check_result(ds.cb.data_o)?"Pass":"Fail");
+         // drive inputs for next cycle
+         $display("%t : %s \n", $realtime, "Driving New Values");
+         ds.cb.data_i <= t.a;
+
+         @(ds.cb);
+         t.golden_result();
+     
+         $display("%d \n", ds.cb.data_o);
+         $display("%d \n", t.last());
+
+         $display("%t : %s \n", $realtime,t.check_result(ds.cb.data_o)?"Pass":"Fail");
       end
    end
 
