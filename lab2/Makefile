@@ -18,7 +18,7 @@ help:
 	echo " help   - show this information";\
 
 cambench: 
-	vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice $(CAMTOP) $(CAMINTERFACE) $(CAMBENCH) $(CAMDUT) -o camtestbench.exe
+	vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice $(CAMTOP) $(CAMINTERFACE) $(CAMBENCH) $(CAMDUT) priorityencoder.sv cff.sv register.sv -o camtestbench.exe
 
 ffbench: 
 	vcs -full64 -PP -sverilog +define+SV +define+VPD +lint=all,noVCDE -notice $(FFTOP) $(FFINTERFACE) $(FFBENCH) $(FFDUT) -o fftestbench.exe
