@@ -53,9 +53,14 @@ class transaction;
         return ret;
     endfunction
 
-    //function bit check_search(int x)
-    //
-    //endfunction
+    function bit check_search(int index, int valid);
+        bit ret;
+        ret = valid && out_search_valid;
+        if(out_search_valid == 1) begin
+            ret = ret && (value == out_search);
+        end
+        return ret;    
+    endfunction
 
 endclass
 
