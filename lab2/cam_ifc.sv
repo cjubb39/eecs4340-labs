@@ -6,21 +6,21 @@ parameter ARRAY_SIZE_LOG2 = 5)
 (input bit clk);
 
   logic reset;
-  logic read_i,
-  logic [ARRAY_WIDTH_LOG2 - 1:0] read_index_i,
+  logic read_i;
+  logic [ARRAY_WIDTH_LOG2 - 1:0] read_index_i;
 
-  logic write_i,
-  logic [ARRAY_WIDTH_LOG2 - 1:0] write_index_i,
-  logic [2**ARRAY_WIDTH_LOG2 - 1:0] write_data_i,
+  logic write_i;
+  logic [ARRAY_WIDTH_LOG2 - 1:0] write_index_i;
+  logic [2**ARRAY_WIDTH_LOG2 - 1:0] write_data_i;
 
-  logic search_i,
-  logic [2**ARRAY_WIDTH_LOG2 - 1:0] search_data_i,
+  logic search_i;
+  logic [2**ARRAY_WIDTH_LOG2 - 1:0] search_data_i;
 
-  logic read_valid_o,
-  logic [2**ARRAY_WIDTH_LOG2 - 1:0] read_value_o,
+  logic read_valid_o;
+  logic [2**ARRAY_WIDTH_LOG2 - 1:0] read_value_o;
 
-  logic search_valid_o,
-  logic [ARRAY_WIDTH_LOG2 - 1:0] search_index_o
+  logic search_valid_o;
+  logic [ARRAY_WIDTH_LOG2 - 1:0] search_index_o;
 
 
    // note that the outputs and inputs are reversed from the dut
