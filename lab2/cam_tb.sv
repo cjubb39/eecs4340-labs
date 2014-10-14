@@ -4,7 +4,7 @@ class transaction;
     rand int in;
     int out_read;
     int out_search;
-    int[32] cam;
+    int cam[32];
  
     function bit check_reset(bit read_valid_o, bit search_valid_o);
         return((read_valid_o == 0 ) && (search_valid_o == 0));
