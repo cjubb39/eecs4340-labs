@@ -104,8 +104,8 @@ class testing_env;
     rand int unsigned rn;
 
     rand int write_value;
-    rand bit write_index[5];
-    rand bit read_index[5]; 
+    rand logic[5:0] write_index;
+    rand logic[5:0] read_index; 
     rand int search_value;
 
     bit read;
@@ -125,7 +125,7 @@ class testing_env;
         string param;
         file = $fopen(filename, "r");
 
-        while(!feof(file)) begin
+        while(!$feof(file)) begin
             chars_returned = $fscanf(file, "%s %s", param, value);
             if("RANDOM_SEED" == param) begin
                 seed = value;
@@ -148,19 +148,19 @@ class testing_env;
         end
     endfunction
 
-    function bit read();
+    function bit get_read();
         return((rn%1000)<read_thresh);
     endfunction
 
-    function bit write();
+    function bit get_write();
         return((rn%1000)<write_thresh);
     endfunction
 
-    function bit search();
+    function bit get_search();
         return((rn%1000)<search_thresh);
     endfunction
 
-    function bit reset();
+    function bit get_reset();
         return((rn%1000)<reset_thresh);
     endfunction
 
@@ -188,10 +188,10 @@ program cam_tb(cam_ifc.bench ds);
          v.randomize();
 
          //decide to read, write, search, or reset
-         read = v.read();
-         write = v.write();
-         search = v.search();
-         reset = v.reset();
+         read = v.get_read();
+         write = v.get_write();
+         search = v.get_search();
+         reset = v.get_reset();
 
          // drive inputs for next cycle
          $display("%t : %s \n", $realtime, "Driving New Values");
@@ -220,8 +220,10 @@ program cam_tb(cam_ifc.bench ds);
          if(reset) begin
 
          end else begin
-         //t.golden_result();
-     
+         
+  	 end
+	 //t.golden_result();
+    	 
          //$display("%d \n", ds.cb.data_o);
          //$display("%d \n", t.last());
 
