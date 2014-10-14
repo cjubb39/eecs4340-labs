@@ -10,15 +10,22 @@ class transaction;
 
     int cam[32];
     bit cam_valid[32];
+    
+    int next;
+    int next_index;
  
     function bit check_reset(bit read_valid_o, bit search_valid_o);
         return((read_valid_o == 0 ) && (search_valid_o == 0));
     endfunction
 
+    function void clock_tic;
+        cam[next_index] = next;
+        cam_valid[next_index] = 1;
+    endfunction
 
     function void golden_result_write(int index, int value);
-        cam[index] = value;
-        cam_valid[index] = 1;
+        next = value;
+        next_index = index;
     endfunction
 
     function void golden_result_read(int index);
