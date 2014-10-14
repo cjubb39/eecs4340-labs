@@ -1,17 +1,36 @@
 `timescale 1ns/1ns
 
 class transaction;
-    //rand bit a;
-    //bit out;
+    rand int in;
+    int out_read;
+    int out_search;
+    int[32] cam;
  
-    //function void golden_result;
-    //    out = a;
-    //endfunction
+    function bit check_reset(bit read_valid_o, bit search_valid_o);
+        return((read_valid_o == 0 ) && (search_valid_o == 0));
+    endfunction
 
 
-    //function bit check_result(bit x);
-    //    return(x == out);
+    function void golden_result_write(int index, int value);
+        cam[index] = value;
+    endfunction
+
+    function void golden_result_read(int index);
+        out_read = cam[index];
+    endfunction
+
+    //function void golden_result_search(int value);
+        
     //endfunction
+
+    function bit check_read_write(int val);
+        return(val = out_read);
+    endfunction
+
+    //function bit check_search(int x)
+    //
+    //endfunction
+
 endclass
 
 
