@@ -47,8 +47,8 @@ class transaction;
     function bit check_read_write(int value, bit valid);
         bit ret;
         ret = valid && out_read_valid;
-        if(read_valid_o == 1) begin
-            ret = ret && value = out_read;
+        if(out_read_valid == 1) begin
+            ret = ret && (value == out_read);
         end
         return ret;
     endfunction
