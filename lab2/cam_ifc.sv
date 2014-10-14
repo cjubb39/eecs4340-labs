@@ -38,8 +38,8 @@ parameter ARRAY_SIZE_LOG2 = 5)
 	      input clk,
         output reset, read_i, write_i, search_i,
              read_index_i, write_index_i, write_data_i,
-             search_data_i;
+             search_data_i,
         input read_valid_o, search_valid_o,
-            read_value_o, search_index_o;
+            read_value_o, search_index_o
         );
 endinterface
