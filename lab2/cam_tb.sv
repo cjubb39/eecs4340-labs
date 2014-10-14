@@ -57,7 +57,7 @@ class transaction;
         bit ret;
         ret = valid && out_search_valid;
         if(out_search_valid == 1) begin
-            ret = ret && (value == out_search);
+            ret = ret && (index == out_search);
         end
         return ret;    
     endfunction
