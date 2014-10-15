@@ -11,8 +11,9 @@ class transaction;
     int cam[32];
     bit cam_valid[32];
     
-    int next;
-    int next_index;
+    int last;
+    int last_index;
+    bit last_valid;
  
 
     /* this checks that reset functions properly */
@@ -28,30 +29,27 @@ class transaction;
     endfunction
 
 
-    /* 
-     * this is used to model the delay between
-     * a combinational read and a sequential
-     * write.
-     */
-    function void clock_tic();
-        cam[next_index] = next;
-        cam_valid[next_index] = 1;
-    endfunction
-
-
     /*
      * run a write operation NOTE: requires clock_tic before
      * it can be applied, to simulate sequential nature of logic
      */
     function void golden_result_write(int index, int value);
-        next = value;
-        next_index = index;
+        last = cam[index];
+	last_index = index;
+	last_valid = cam_valid[index];
+	cam[index] = value;
+	cam_valid[index] = 1;
     endfunction
 
     /* calulate golden output of a read op */
     function void golden_result_read(int index);
-        out_read = cam[index];
-        out_read_valid = cam_valid[index];
+	if(index == last_index) begin
+	    out_read = last;
+	    out_read_valid = last_valid;
+	end else begin
+	    out_read = cam[index];
+	    out_read_valid = cam_valid[index];
+	end
     endfunction
 
     /* calulate the golden output of a search */
@@ -113,10 +111,10 @@ class testing_env;
     bit search;
     bit reset;
 
-    int unsigned read_thresh;
-    int unsigned write_thresh;
-    int unsigned search_thresh;
-    int unsigned reset_thresh;
+    int read_thresh;
+    int write_thresh;
+    int search_thresh;
+    int reset_thresh;
 
     int iter;
 
@@ -126,7 +124,7 @@ class testing_env;
         file = $fopen(filename, "r");
 
         while(!$feof(file)) begin
-            chars_returned = $fscanf(file, "%s %s", param, value);
+            chars_returned = $fscanf(file, "%s %d", param, value);
             if("RANDOM_SEED" == param) begin
                 seed = value;
                 $srandom(seed);
@@ -183,6 +181,13 @@ program cam_tb(cam_ifc.bench ds);
        v = new();
        v.read_config("config.txt");
 
+       repeat(10) begin
+            ds.cb.reset <= 1'b1;
+            @(ds.cb);
+       end
+
+       ds.cb.reset <= 1'b0;
+
        repeat(v.iter) begin
          t.randomize();
          v.randomize();
@@ -195,8 +200,8 @@ program cam_tb(cam_ifc.bench ds);
 
          // drive inputs for next cycle
          $display("%t : %s \n", $realtime, "Driving New Values");
-         //ds.cb.data_i <= t.a;
-         if(reset) begin
+         
+	 if(reset) begin
             ds.cb.reset <= 1'b1;
          end else begin
             if(read) begin
@@ -214,20 +219,22 @@ program cam_tb(cam_ifc.bench ds);
             end
          end
 
-
-
          @(ds.cb);
+	 //golden results
+	 t.golden_result_write(v.write_index, v.write_value);
+	 t.golden_result_read(v.read_index);
+	 t.golden_result_search(v.search_value);
+
          if(reset) begin
-
+             $display("%t : %s \n", $realtime,t.check_reset(ds.cb.read_valid_o, ds.cb.search_valid_o)?"Pass-reset":"Fail-reset");
          end else begin
-         
+            if(read) begin
+             $display("%t : %s \n", $realtime,t.check_read_write(ds.cb.read_value_o, ds.cb.read_valid_o)?"Pass-read":"Fail-read");
+	    end
+            if(search) begin
+             $display("%t : %s \n", $realtime,t.check_search(ds.cb.search_index_o, ds.cb.search_valid_o)?"Pass-search":"Fail-search");
+	    end
   	 end
-	 //t.golden_result();
-    	 
-         //$display("%d \n", ds.cb.data_o);
-         //$display("%d \n", t.last());
-
-         //$display("%t : %s \n", $realtime,t.check_result(ds.cb.data_o)?"Pass":"Fail");
       end
    end
 

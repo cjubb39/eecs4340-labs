@@ -35,8 +35,8 @@ program ff_tb(ff_ifc.bench ds);
          @(ds.cb);
          t.golden_result();
      
-         $display("%d \n", ds.cb.data_o);
-         $display("%d \n", t.last());
+         //$display("%d \n", ds.cb.data_o);
+         //$display("%d \n", t.last());
 
          $display("%t : %s \n", $realtime,t.check_result(ds.cb.data_o)?"Pass":"Fail");
       end

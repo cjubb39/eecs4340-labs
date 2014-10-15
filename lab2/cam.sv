@@ -124,7 +124,7 @@ register #(.SIZE(2**ARRAY_SIZE_LOG2)) ar_inst (.clk(d.clk), .reset(d.reset), .da
 
 /*generate registers for CAM entries */
 generate
-for(genvar iter = 0; iter<2**ARRAY_SIZE_LOG2;iter++) begin
+for(genvar iter = 0; iter<2**ARRAY_SIZE_LOG2;iter++) begin : generate_block_1
 register #(.SIZE(2**ARRAY_SIZE_LOG2)) ar_inst(.clk(d.clk), .reset(d.reset), .data_i(cam_i[iter]), .data_o(cam_o[iter]));
 end
 endgenerate
