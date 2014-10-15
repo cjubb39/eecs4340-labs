@@ -33,16 +33,24 @@ class transaction;
      * run a write operation NOTE: requires clock_tic before
      * it can be applied, to simulate sequential nature of logic
      */
-    function void golden_result_write(int index, int value);
+    function void golden_result_write(bit v,int index, int value);
+	if(v) begin
         last = cam[index];
 	last_index = index;
 	last_valid = cam_valid[index];
 	cam[index] = value;
 	cam_valid[index] = 1;
+	end
+    endfunction
+
+    function void clock_tic();
+	last = -1;
+	last_index = -1;
     endfunction
 
     /* calulate golden output of a read op */
-    function void golden_result_read(int index);
+    function void golden_result_read(bit v,int index);
+	if(v) begin
 	if(index == last_index) begin
 	    out_read = last;
 	    out_read_valid = last_valid;
@@ -50,10 +58,12 @@ class transaction;
 	    out_read = cam[index];
 	    out_read_valid = cam_valid[index];
 	end
+	end
     endfunction
 
     /* calulate the golden output of a search */
-    function void golden_result_search(int value);
+    function void golden_result_search(bit v,int value);
+	if(v) begin
         int i = 0;
         int found = 0;
         for(i=0;i<32;i=i+1) begin
@@ -68,12 +78,13 @@ class transaction;
         end else begin
             out_search_valid = 0;
         end
+	end
     endfunction
 
     /* check if write/read functions correctly */
     function bit check_read_write(int value, bit valid);
         bit ret;
-        ret = valid && out_read_valid;
+        ret = (valid == out_read_valid);
         if(out_read_valid == 1) begin
             ret = ret && (value == out_read);
         end
@@ -83,7 +94,7 @@ class transaction;
     /* check if search functions correctly */
     function bit check_search(int index, int valid);
         bit ret;
-        ret = valid && out_search_valid;
+        ret = (valid == out_search_valid);
         if(out_search_valid == 1) begin
             ret = ret && (index == out_search);
         end
@@ -102,8 +113,8 @@ class testing_env;
     rand int unsigned rn;
 
     rand int write_value;
-    rand logic[5:0] write_index;
-    rand logic[5:0] read_index; 
+    rand logic[4:0] write_index;
+    rand logic[4:0] read_index; 
     rand int search_value;
 
     bit read;
@@ -187,9 +198,9 @@ program cam_tb(cam_ifc.bench ds);
        end
 
        ds.cb.reset <= 1'b0;
+       @(ds.cb);
 
        repeat(v.iter) begin
-         t.randomize();
          v.randomize();
 
          //decide to read, write, search, or reset
@@ -199,31 +210,40 @@ program cam_tb(cam_ifc.bench ds);
          reset = v.get_reset();
 
          // drive inputs for next cycle
-         $display("%t : %s \n", $realtime, "Driving New Values");
-         
 	 if(reset) begin
             ds.cb.reset <= 1'b1;
+            $display("%t : %s \n", $realtime, "Driving Reset");
          end else begin
+            ds.cb.reset <= 1'b0;
             if(read) begin
                 ds.cb.read_i <= 1'b1;
                 ds.cb.read_index_i <= v.read_index; 
-            end
+                $display("%t : %s : %d \n", $realtime, "Driving New read of index ",v.read_index);
+            end else begin
+		ds.cb.read_i <= 1'b0;
+	    end
             if(write) begin
                 ds.cb.write_i <= 1'b1;
                 ds.cb.write_index_i <= v.write_index;
                 ds.cb.write_data_i <= v.write_value;
-            end
+                $display("%t : %s : %d / %d\n", $realtime, "Driving New write of index/value ",v.write_index,v.write_value);
+            end else begin
+		ds.cb.write_i <= 1'b0;
+	    end
             if(search) begin
                 ds.cb.search_i <= 1'b1;
                 ds.cb.search_data_i <= v.search_value;
-            end
+                $display("%t : %s : %d \n", $realtime, "Driving New search of value ",v.search_value);
+            end else begin
+		ds.cb.search_i <= 1'b0;
+	    end
          end
 
          @(ds.cb);
 	 //golden results
-	 t.golden_result_write(v.write_index, v.write_value);
-	 t.golden_result_read(v.read_index);
-	 t.golden_result_search(v.search_value);
+	 t.golden_result_write(write,v.write_index, v.write_value);
+	 t.golden_result_read(read,v.read_index);
+	 t.golden_result_search(search,v.search_value);
 
          if(reset) begin
              $display("%t : %s \n", $realtime,t.check_reset(ds.cb.read_valid_o, ds.cb.search_valid_o)?"Pass-reset":"Fail-reset");
@@ -235,6 +255,7 @@ program cam_tb(cam_ifc.bench ds);
              $display("%t : %s \n", $realtime,t.check_search(ds.cb.search_index_o, ds.cb.search_valid_o)?"Pass-search":"Fail-search");
 	    end
   	 end
+	 t.clock_tic();
       end
    end
 
