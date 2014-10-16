@@ -5,11 +5,13 @@ module register #(
 (
 	input clk,
 	input reset,
+	input enable,
 
 	input logic [SIZE-1:0] data_i,
-	output logic [SIZE- 1:0] data_o
+	output logic [SIZE- 1:0] data_o,
+	output bit valid_o
 );
 
-cff #(.SIZE(SIZE)) ff_inst(.*);
+ceff #(.SIZE(SIZE)) ff_inst(.*);
 
 endmodule
