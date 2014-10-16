@@ -4,15 +4,15 @@
 
 module ff_top;
 
-   // clock generator
-   bit clk = 1;
-   always #5 clk = ~clk;
+// clock generator
+bit clk = 1;
+always #5 clk = ~clk;
 
-   // command to generate the VCD dump file that you open with DVE
-   initial $vcdpluson;
+// command to generate the VCD dump file that you open with DVE
+initial $vcdpluson;
 
-   ff_ifc IFC(clk); // instantiate the interface file
-   ff dut (IFC.dut); 
-   ff_tb bench (IFC.bench);
+ff_ifc IFC(clk); // instantiate the interface file
+ff dut (IFC.dut); 
+ff_tb bench (IFC.bench);
 
 endmodule

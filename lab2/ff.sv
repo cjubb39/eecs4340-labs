@@ -7,12 +7,12 @@ assign d.data_o = data;
 
 
 always_ff @(posedge d.clk) begin
-    if(d.reset) begin
-        data <= 'b0;
-    end
-    else begin
-        data <= d.data_i;
-    end
+	if(d.reset) begin
+		data <= 'b0;
+	end
+	else begin
+		data <= d.data_i;
+	end
 end
 
 
