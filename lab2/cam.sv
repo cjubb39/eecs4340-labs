@@ -20,13 +20,6 @@ logic [2**ARRAY_WIDTH_LOG2 - 1:0] cam_i [2**ARRAY_SIZE_LOG2 - 1:0];
 wire [2**ARRAY_WIDTH_LOG2 - 1:0] cam_o [2**ARRAY_SIZE_LOG2 - 1:0];
 wire cam_v_o [2**ARRAY_SIZE_LOG2 - 1:0]; 
 
-/*generate registers for CAM entries */
-generate
-	for(genvar iter = 0; iter<2**ARRAY_SIZE_LOG2;iter++) begin : generate_block_1
-	register #(.SIZE(2**ARRAY_SIZE_LOG2)) ar_inst(.clk(d.clk), .reset(d.reset), .data_i(cam_i[iter]), .data_o(cam_o[iter]), .enable(write_reg_enable[iter]), .valid_o(cam_v_o[iter]));
-	end
-endgenerate
-
 /* CAM search intermediate */
 logic [2**ARRAY_SIZE_LOG2-1:0] cam_found; /*output of ANDing CAM entries with input */
 
@@ -58,5 +51,13 @@ assign d.read_valid_o = d.read_i && written && !d.reset; /*read if value was pre
 assign d.search_valid_o = d.search_i && found && !d.reset; /*search_o if value found in CAM */
 assign d.read_value_o = out_value; /*output read result */
 assign d.search_index_o = out_index;/*output search index */
+
+
+/*generate registers for CAM entries */
+generate
+	for(genvar iter = 0; iter<2**ARRAY_SIZE_LOG2;iter++) begin : generate_block_1
+	register #(.SIZE(2**ARRAY_SIZE_LOG2)) ar_inst(.clk(d.clk), .reset(d.reset), .data_i(cam_i[iter]), .data_o(cam_o[iter]), .enable(write_reg_enable[iter]), .valid_o(cam_v_o[iter]));
+	end
+endgenerate
 
 endmodule
