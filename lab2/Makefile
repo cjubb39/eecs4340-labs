@@ -9,6 +9,9 @@ FFINTERFACE=ff_ifc.sv
 FFBENCH=ff_tb.sv
 FFDUT=ff.sv
 
+.PHONY: all
+all: ffbench cambench
+
 help:
 	@echo "The following make targets are supported:" ;\
 	echo " ffbench  - builds the testbench";\
