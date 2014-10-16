@@ -1,3 +1,9 @@
+To build fftestbench.exe for part 1, run:
+$ make ffbench
+
+To build camtestbench.exe for all subsequent parts, run:
+$ make cambench
+
 (1) There are only two elements of functionality to check for the flip flop. We want to make sure that on reset, the output is driven to 0. We also want to check that if I drive a value A on cycle n, the output is A on cycle n+1. Both of these are validated in the flip flop test bench.
 
 (2) The skeleton for the CAM contains a software model of the CAM and the check* and golden_output* functions called “transaction”, an environment setup and number generator called testing_env, and the test bench program itself. In total this was around 100 lines of code in the test bench, as well as creating an interface file and cam_top file modeled off the ones we looked at in class. We also needed to modify the CAM to work with the interface, and correct the issues from lab 1. There were no specific issues here, but we did learn that in addition to “rand int var_name”, you can use constructs from system verilog as random numbers, like “rand logic[4:0] var_name”, which we used to generate the indices for reads and writes. 
